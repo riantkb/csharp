@@ -5,7 +5,6 @@ using System.IO;
 using System.Threading;
 using System.Text;
 using System.Diagnostics;
-
 using static util;
 using P = pair<int, int>;
 
@@ -33,10 +32,9 @@ class Solver {
     }
 
     public void solve() {
-        Prt(util.LM);
+
     }
 }
-
 
 class pair<T, U> : IComparable<pair<T, U>> {
     public T v1;
