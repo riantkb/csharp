@@ -94,6 +94,13 @@ static class MyMath {
         invs[n] = inv(facts[n]);
         for (int i = n; i > 0 ; i--) invs[i - 1] = invs[i] * i % Mod;
     }
+    public static long fact(long n) {
+        if (n < 0) return 0;
+        if (facts != null && facts.Length > n) return facts[n];
+        long numer = 1;
+        for (long i = 1; i <= n; i++) numer = numer * (i % Mod) % Mod;
+        return numer;
+    }
     public static long perm(long n, long r) {
         if (n < 0 || r < 0 || r > n) return 0;
         if (facts != null && facts.Length > n) return facts[n] * invs[n - r] % Mod;
