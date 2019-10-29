@@ -20,7 +20,8 @@ class PriorityQueue<T> {
         buf.Add(elem);
         while (n > 0) {
             int i = (n - 1) >> 1;
-            if (cmp(n, i) > 0) swap(i, n);
+            if (cmp(n, i) <= 0) break;
+            swap(i, n);
             n = i;
         }
     }
@@ -29,9 +30,10 @@ class PriorityQueue<T> {
         int n = buf.Count - 1;
         buf[0] = buf[n];
         buf.RemoveAt(n);
-        for (int i = 0, j; (j = (i << 1) + 1) < n; i = j) {
+        for (int i = 0, j; (j = (i << 1) | 1) < n; i = j) {
             if (j != n - 1 && cmp(j, j + 1) < 0) ++j;
             if (cmp(i, j) < 0) swap(i, j);
+            else break;
         }
         return ret;
     }
