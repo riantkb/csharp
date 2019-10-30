@@ -14,19 +14,26 @@ static class ShortestPath {
 
     class Heap {
         int n;
+        Number inf;
         Number[] values;
         int[] keys, indices;
-        public Heap(Number[] dist) {
-            n = dist.Length;
-            values = dist;
+        public Heap(int n, int s, Number inf) {
+            this.n = n;
+            this.inf = inf;
+            values = new Number[n];
+            for (int i = 0; i < n; i++) values[i] = i == s ? 0 : inf;
             keys = new int[n];
-            for (int i = 0; i < n; i++) keys[i] = i;
-            Array.Sort(keys, (x, y) => values[x].CompareTo(values[y]));
             indices = new int[n];
-            for (int i = 0; i < n; i++) indices[keys[i]] = i;
+            keys[0] = s;
+            indices[s] = 0;
+            for (int i = 1, j = 0; i < n; i++, j++) {
+                if (s == j) ++j;
+                keys[i] = j;
+                indices[j] = i;
+            }
         }
 
-        public void Update(int i, Number val) {
+        void Update(int i, Number val) {
             values[i] = val;
             int p = indices[i];
             while (p > 0) {
@@ -41,11 +48,14 @@ static class ShortestPath {
             keys[p] = i;
             indices[i] = p;
         }
-        public int Pop() {
+        int Pop() {
             --n;
             int ret = keys[0];
-            indices[ret] = -1;
-            Number val = values[keys[n]];
+            // indices[ret] = -1;
+            int i = keys[n];
+            // keys[n] = -1;
+            Number val = values[i];
+            if (n == 0) return ret;
             int p = 0;
             while ((p << 1 | 1) < n) {
                 int ch = p << 1 | 1;
@@ -57,35 +67,23 @@ static class ShortestPath {
                 }
                 else break;
             }
-            if (n > 0) {
-                keys[p] = keys[n];
-                indices[keys[p]] = p;
-            }
-            keys[n] = -1;
+            keys[p] = i;
+            indices[i] = p;
             return ret;
         }
-        public int Top => keys[0];
-    }
-
-
-    public static Number[] Dijkstra(List<pair<Number, int>>[] edges, int s, Number inf) {
-        int n = edges.Length;
-        var dist = new Number[n];
-        for (int i = 0; i < n; ++i) dist[i] = inf;
-        dist[s] = 0;
-        return Dijkstra(edges, dist, inf);
-    }
-    public static Number[] Dijkstra(List<pair<Number, int>>[] edges, Number[] dist, Number inf) {
-        int n = edges.Length;
-        var q = new Heap(dist);
-        while (q.Top != -1 && dist[q.Top] < inf) {
-            int p = q.Pop();
-            foreach (var e in edges[p])
-                if (dist[e.v2] > dist[p] + e.v1)
-                    q.Update(e.v2, dist[p] + e.v1);
+        public Number[] Run(List<pair<Number, int>>[] edges) {
+            while (n > 0 && values[keys[0]] < inf) {
+                int p = Pop();
+                foreach (var e in edges[p])
+                    if (values[e.v2] > values[p] + e.v1)
+                        Update(e.v2, values[p] + e.v1);
+            }
+            return values;
         }
-        return dist;
     }
+
+    public static Number[] Dijkstra(List<pair<Number, int>>[] edges, int s, Number inf) => new Heap(edges.Length, s, inf).Run(edges);
+
     // public static Number[] Dijkstra(List<pair<Number, int>>[] edges, int s, out long[] cnt, long Mod) {
     //     int n = edges.Length;
     //     var dist = new Number[n];
