@@ -14,26 +14,29 @@ static class ShortestPath {
 
     class Heap {
         int n;
-        Number inf;
         Number[] values;
         int[] keys, indices;
         public Heap(int n, int s, Number inf) {
-            this.n = n;
-            this.inf = inf;
+            this.n = 1;
             values = new Number[n];
-            for (int i = 0; i < n; i++) values[i] = i == s ? 0 : inf;
             keys = new int[n];
             indices = new int[n];
+            for (int i = 0; i < n; i++) {
+                values[i] = inf;
+                keys[i] = -1;
+                indices[i] = -1;
+            }
+            values[s] = 0;
             keys[0] = s;
             indices[s] = 0;
-            for (int i = 1, j = 0; i < n; i++, j++) {
-                if (s == j) ++j;
-                keys[i] = j;
-                indices[j] = i;
-            }
         }
 
         void Update(int i, Number val) {
+            if (indices[i] == -1) {
+                keys[n] = i;
+                indices[i] = n;
+                ++n;
+            }
             values[i] = val;
             int p = indices[i];
             while (p > 0) {
@@ -51,9 +54,9 @@ static class ShortestPath {
         int Pop() {
             --n;
             int ret = keys[0];
-            // indices[ret] = -1;
+            indices[ret] = -1;
             int i = keys[n];
-            // keys[n] = -1;
+            keys[n] = -1;
             Number val = values[i];
             if (n == 0) return ret;
             int p = 0;
@@ -72,7 +75,7 @@ static class ShortestPath {
             return ret;
         }
         public Number[] Run(List<pair<Number, int>>[] edges) {
-            while (n > 0 && values[keys[0]] < inf) {
+            while (n > 0) {
                 int p = Pop();
                 foreach (var e in edges[p])
                     if (values[e.v2] > values[p] + e.v1)
