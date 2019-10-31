@@ -67,9 +67,8 @@ static class MyMath {
         return g;
     }
 
-    // 中国剰余定理
-    // リターン値を (r, m) とすると解は x ≡ r (mod. m)
-    // 解なしの場合は (0, -1) をリターン
+    // return (r, m): x = r (mod. m)
+    // return (0, -1) if no answer
     public static pair<long, long> chineserem(IList<long> b, IList<long> m) {
         long r = 0, M = 1;
         for (int i = 0; i < b.Count; ++i) {
@@ -83,6 +82,23 @@ static class MyMath {
         return new pair<long, long>((r % M + M) % M, M);
     }
 
+    // return k: x^k = y (mod. mod) O(sqrt(mod))
+    public static long modlog(long x, long y, long mod) {
+        if (y == 1) return 0;
+        long H = (long)Math.Sqrt(mod) + 1;
+        var baby = new Dictionary<long, long>();
+        for (long b = 0, xby = y; b < H; b++, xby = (xby * x) % mod)
+            if (!baby.ContainsKey(xby))
+                baby.Add(xby, b);
+
+        long xH = 1;
+        for (int i = 0; i < H; ++i) xH = xH * x % mod;
+        for (long a = 1, xaH = xH; a <= H; a++, xaH = (xaH * xH) % mod)
+            if (baby.ContainsKey(xaH))
+                return a * H - baby[xaH];
+
+        return -1;
+    }
     public static long lcm(long a, long b) => a / gcd(a, b) * b;
 
     static long[] facts, invs;
