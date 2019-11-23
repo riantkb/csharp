@@ -16,20 +16,6 @@ static class ShortestPath {
         int n;
         Number[] values;
         int[] keys, indices;
-        public Heap(int n, int s, Number inf) {
-            this.n = 1;
-            values = new Number[n];
-            keys = new int[n];
-            indices = new int[n];
-            for (int i = 0; i < n; i++) {
-                values[i] = inf;
-                keys[i] = -1;
-                indices[i] = -1;
-            }
-            values[s] = 0;
-            keys[0] = s;
-            indices[s] = 0;
-        }
 
         void Update(int i, Number val) {
             if (indices[i] == -1) {
@@ -74,7 +60,25 @@ static class ShortestPath {
             indices[i] = p;
             return ret;
         }
-        public Number[] Run(List<pair<Number, int>>[] edges) {
+
+        void init(int m, int s, Number inf) {
+            values = new Number[m];
+            keys = new int[m];
+            indices = new int[m];
+            for (int i = 0; i < m; i++) {
+                values[i] = inf;
+                keys[i] = -1;
+                indices[i] = -1;
+            }
+            values[s] = 0;
+            keys[0] = s;
+            indices[s] = 0;
+        }
+
+        public Number[] Run(List<pair<Number, int>>[] edges, int s, Number inf) {
+            init(edges.Length, s, inf);
+
+            n = 1;
             while (n > 0) {
                 int p = Pop();
                 foreach (var e in edges[p])
@@ -83,32 +87,29 @@ static class ShortestPath {
             }
             return values;
         }
+        public pair<Number[], long[]> Run(List<pair<Number, int>>[] edges, int s, long Mod, Number inf) {
+            init(edges.Length, s, inf);
+            var cnts = new long[edges.Length];
+            cnts[s] = 1;
+
+            n = 1;
+            while (n > 0) {
+                int p = Pop();
+                foreach (var e in edges[p])
+                    if (values[e.v2] > values[p] + e.v1) {
+                        cnts[e.v2] = cnts[p];
+                        Update(e.v2, values[p] + e.v1);
+                    }
+                    else if (values[e.v2] == values[p] + e.v1)
+                        cnts[e.v2] = (cnts[e.v2] + cnts[p]) % Mod;
+            }
+            return new pair<Number[], long[]>(values, cnts);
+        }
     }
 
-    public static Number[] Dijkstra(List<pair<Number, int>>[] edges, int s, Number inf) => new Heap(edges.Length, s, inf).Run(edges);
+    public static Number[] Dijkstra(List<pair<Number, int>>[] edges, int s, Number inf)
+        => new Heap().Run(edges, s, inf);
 
-    // public static Number[] Dijkstra(List<pair<Number, int>>[] edges, int s, out long[] cnt, long Mod) {
-    //     int n = edges.Length;
-    //     var dist = new Number[n];
-    //     var q = new PriorityQueue<pair<Number, int>>(){ rev = true };
-    //     for (int i = 0; i < n; ++i) dist[i] = Inf;
-    //     dist[s] = 0;
-    //     q.Push(new pair<Number, int>(dist[s], s));
-    //     cnt = new long[n];
-    //     cnt[s] = 1;
-    //     while (q.Count > 0) {
-    //         var p = q.Pop();
-    //         if (dist[p.v2] < p.v1) continue;
-    //         foreach (var e in edges[p.v2]) {
-    //             Number d = p.v1 + e.v1;
-    //             if (dist[e.v2] > d) {
-    //                 dist[e.v2] = d;
-    //                 cnt[e.v2] = cnt[p.v2];
-    //                 q.Push(new pair<Number, int>(d, e.v2));
-    //             }
-    //             else if (dist[e.v2] == d) cnt[e.v2] = (cnt[e.v2] + cnt[p.v2]) % Mod;
-    //         }
-    //     }
-    //     return dist;
-    // }
+    public static pair<Number[], long[]> Dijkstra(List<pair<Number, int>>[] edges, int s, long Mod, Number inf)
+        => new Heap().Run(edges, s, Mod, inf);
 }
