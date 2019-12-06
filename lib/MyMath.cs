@@ -37,20 +37,13 @@ static class MyMath {
     }
     public static long pow(long a, long b, long mod) {
         a %= mod;
-        // if (a == 0) return 0;
-        if (b == 0) return 1;
+        if (b < 0) Console.Error.WriteLine($"power number is negative ({a}^{b}).");
+        if (b <= 0) return 1;
         var t = pow(a, b / 2, mod);
         if ((b & 1) == 0) return t * t % mod;
         return t * t % mod * a % mod;
     }
-    public static long pow(long a, long b) {
-        a %= Mod;
-        // if (a == 0) return 0;
-        if (b == 0) return 1;
-        var t = pow(a, b / 2);
-        if ((b & 1) == 0) return t * t % Mod;
-        return t * t % Mod * a % Mod;
-    }
+    public static long pow(long a, long b) => pow(a, b, Mod);
     public static long inv(long a) => pow(a, Mod - 2);
     public static long gcd(long a, long b) {
         while (b > 0) {
