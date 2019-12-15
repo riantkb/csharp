@@ -80,9 +80,12 @@ static class MyMath {
         if (y == 1) return 0;
         long H = (long)Math.Sqrt(mod) + 1;
         var baby = new Dictionary<long, long>();
-        for (long b = 0, xby = y; b < H; b++, xby = (xby * x) % mod)
+        for (long b = 0, xby = y; b < H; b++, xby = (xby * x) % mod) {
             if (!baby.ContainsKey(xby))
                 baby.Add(xby, b);
+            else
+                baby[xby] = b;
+        }
 
         long xH = 1;
         for (int i = 0; i < H; ++i) xH = xH * x % mod;
