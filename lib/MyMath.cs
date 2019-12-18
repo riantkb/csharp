@@ -15,6 +15,16 @@ static class MyMath {
         for (int i = 2; i * i <= n; i++) if (p[i]) for (int j = i * i; j <= n; j += i) p[j] = false;
         return p;
     }
+    public static int[] sieve2(int n) {
+        var p = new int[n + 1];
+        for (int i = 2; i <= n; i++) p[i] = i;
+        for (int i = 2; i * i <= n; i++) {
+            if (p[i] == i)
+                for (int j = i * i; j <= n; j += i)
+                    p[j] = Math.Min(p[j], i);
+        }
+        return p;
+    }
     public static bool[] segmentSieve(long l, long r) {
         int sqn = (int)Math.Sqrt(r + 9);
         var ps = getprimes(sqn);
