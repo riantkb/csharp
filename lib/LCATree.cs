@@ -7,7 +7,8 @@ class LCATree {
     long[][] dis;
     long[] distfrompar;
     int[] dep;
-    public LCATree(int n, List<pair<long, int>>[] g) {
+    public LCATree(List<pair<long, int>>[] g, int root) {
+        int n = g.Length;
         parent = new int[n][];
         dis = new long[n][];
         dep = new int[n];
@@ -24,10 +25,10 @@ class LCATree {
                 dis[i][j] = 1L << 60;
             }
         }
-        dep[0] = 0;
-        distfrompar[0] = 0;
+        dep[root] = 0;
+        distfrompar[root] = 0;
         var q = new Queue<int>();
-        q.Enqueue(0);
+        q.Enqueue(root);
         while (q.Count > 0) {
             var p = q.Dequeue();
             foreach (var item in g[p]) {
