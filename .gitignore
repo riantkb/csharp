@@ -7,3 +7,5 @@
 !lib/*.cs
 !tools
 !tools/*.cs
+!test
+!test/*.csx
