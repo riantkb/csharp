@@ -57,7 +57,9 @@ static class util {
     public static void DBG(string a) => Console.Error.WriteLine(a);
     public static void DBG<T>(IEnumerable<T> a) => DBG(string.Join(" ", a));
     public static void DBG(params object[] a) => DBG(string.Join(" ", a));
-    public static void Assert(bool cond) { if (!cond) throw new Exception(); }
+    public static void Assert(params bool[] conds) {
+        foreach (var cond in conds) if (!cond) throw new Exception();
+    }
     public static pair<T, U> make_pair<T, U>(T v1, U v2) => new pair<T, U>(v1, v2);
     public static int CompareList<T>(IList<T> a, IList<T> b) where T : IComparable<T> {
         for (int i = 0; i < a.Count && i < b.Count; i++)
