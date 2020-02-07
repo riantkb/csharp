@@ -91,6 +91,21 @@ static class util {
         for (int i = 0; i < a.Count; i++) ret[i] = a[i];
         return ret;
     }
+    public static void Deconstruct<T>(this IList<T> v, out T a) {
+        a = v[0];
+    }
+    public static void Deconstruct<T>(this IList<T> v, out T a, out T b) {
+        a = v[0]; b = v[1];
+    }
+    public static void Deconstruct<T>(this IList<T> v, out T a, out T b, out T c) {
+        a = v[0]; b = v[1]; c = v[2];
+    }
+    public static void Deconstruct<T>(this IList<T> v, out T a, out T b, out T c, out T d) {
+        a = v[0]; b = v[1]; c = v[2]; d = v[3];
+    }
+    public static void Deconstruct<T>(this IList<T> v, out T a, out T b, out T c, out T d, out T e) {
+        a = v[0]; b = v[1]; c = v[2]; d = v[3]; e = v[4];
+    }
 }
 
 class Scan {
@@ -119,12 +134,16 @@ class Scan {
                        : eq<T, char>()   ? ct<T, char>(s[0])
                                          : ct<T, string>(s);
     public void Multi<T>(out T a) => a = cv<T>(Str);
-    public void Multi<T, U>(out T a, out U b)
-    { var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); }
-    public void Multi<T, U, V>(out T a, out U b, out V c)
-    { var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); }
-    public void Multi<T, U, V, W>(out T a, out U b, out V c, out W d)
-    { var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); d = cv<W>(ar[3]); }
-    public void Multi<T, U, V, W, X>(out T a, out U b, out V c, out W d, out X e)
-    { var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); d = cv<W>(ar[3]); e = cv<X>(ar[4]); }
+    public void Multi<T, U>(out T a, out U b) {
+        var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]);
+    }
+    public void Multi<T, U, V>(out T a, out U b, out V c) {
+        var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]);
+    }
+    public void Multi<T, U, V, W>(out T a, out U b, out V c, out W d) {
+        var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); d = cv<W>(ar[3]);
+    }
+    public void Multi<T, U, V, W, X>(out T a, out U b, out V c, out W d, out X e) {
+        var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); d = cv<W>(ar[3]); e = cv<X>(ar[4]);
+    }
 }
