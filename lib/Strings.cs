@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-// !!! not verify yet !!!
 static class Strings {
-    static int[] z_algo<T>(IList<T> s, Func<T, T, bool> eq) {
+    public static int[] z_algo<T>(IList<T> s, Func<T, T, bool> eq) {
         int n = s.Count;
         var res = new int[n];
         res[0] = n;
@@ -25,9 +24,9 @@ static class Strings {
         }
         return res;
     }
-    static int[] z_algo(string s) => z_algo(s.ToCharArray(), (x, y) => x == y);
+    public static int[] z_algo(string s) => z_algo(s.ToCharArray(), (x, y) => x == y);
 
-    static int[] kmp<T>(IList<T> s, Func<T, T, bool> eq) {
+    public static int[] kmp<T>(IList<T> s, Func<T, T, bool> eq) {
         int n = s.Count;
         var res = new int[n + 1];
         res[0] = -1;
@@ -39,9 +38,9 @@ static class Strings {
         }
         return res;
     }
-    static int[] kmp(string s) => kmp(s.ToCharArray(), (x, y) => x == y);
+    public static int[] kmp(string s) => kmp(s.ToCharArray(), (x, y) => x == y);
 
-    static int[] manacher<T>(IList<T> s, Func<T, T, bool> eq) {
+    public static int[] manacher<T>(IList<T> s, Func<T, T, bool> eq) {
         int n = s.Count;
         int i = 0, j = 0;
         var res = new int[n];
@@ -58,7 +57,7 @@ static class Strings {
         }
         return res;
     }
-    static int[] manacher(string s, bool extend = false, char dummy = '$') {
+    public static int[] manacher(string s, bool extend = false, char dummy = '$') {
         if (extend) {
             var l = new char[s.Length * 2 - 1];
             for (int i = 0; i < l.Length; i++)
