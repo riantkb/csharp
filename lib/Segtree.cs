@@ -35,7 +35,7 @@ class Segtree<T> {
         for (int i = n - 2; i >= 0; i--)
             data[i] = f(data[i << 1 | 1], data[i + 1 << 1]);
     }
-    public T look(int i) => data[i + n - 1];
+    public T at(int i) => data[i + n - 1];
 
     // [s, t)
     public T run(int s, int t) => run(s, t, 0, 0, n);
