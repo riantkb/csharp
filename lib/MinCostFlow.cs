@@ -23,7 +23,7 @@ class MinCostFlow {
     }
     public void addEdge(int from, int to, int cap, long cost) {
         g[from].Add(new edge(to, cap, cost, g[to].Count));
-        g[to].Add(new edge(from, 0, -cost, g[from].Count));
+        g[to].Add(new edge(from, 0, -cost, g[from].Count - 1));
     }
     public long run(int s, int t, int f) {
         long res = 0;
