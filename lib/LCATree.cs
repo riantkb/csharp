@@ -1,85 +1,81 @@
+using System;
 using System.Collections.Generic;
 
-class LCATree {
+class LCATree<T> {
     int m;
-    int[][] par;
-    long[] dis;
-    int[] dep;
-    public LCATree(List<pair<long, int>>[] g, int root = 0) {
+    int[][] parents;
+    T[][] values;
+    Func<T, T, T> func;
+    T identity;
+    int[] depth;
+
+    public LCATree(List<pair<T, int>>[] g, Func<T, T, T> func, T identity, int root = 0) {
         int n = g.Length;
-        par = new int[n][];
-        dep = new int[n];
-        dis = new long[n];
+        parents = new int[n][];
+        values = new T[n][];
+        depth = new int[n];
+        this.func = func;
+        this.identity = identity;
         m = 1;
         while ((1 << m - 1) < n) ++m;
         for (int i = 0; i < n; i++) {
-            dep[i] = -1;
-            par[i] = new int[m];
-            for (int j = 0; j < m; j++) par[i][j] = -1;
+            parents[i] = new int[m];
+            values[i] = new T[m];
+            depth[i] = -1;
+            for (int j = 0; j < m; j++) {
+                parents[i][j] = -1;
+                values[i][j] = identity;
+            }
         }
-        dep[root] = 0;
+        depth[root] = 0;
         var q = new Queue<int>();
         q.Enqueue(root);
         while (q.Count > 0) {
             var p = q.Dequeue();
             foreach (var item in g[p]) {
-                if (dep[item.v2] == -1) {
-                    dep[item.v2] = dep[p] + 1;
-                    dis[item.v2] = dis[p] + item.v1;
-                    par[item.v2][0] = p;
-                    for (int i = 1; i < m && par[item.v2][i - 1] != -1; i++)
-                        par[item.v2][i] = par[par[item.v2][i - 1]][i - 1];
-
+                if (depth[item.v2] == -1) {
+                    depth[item.v2] = depth[p] + 1;
+                    parents[item.v2][0] = p;
+                    values[item.v2][0] = item.v1;
+                    for (int i = 1; i < m && parents[item.v2][i - 1] != -1; i++) {
+                        parents[item.v2][i] = parents[parents[item.v2][i - 1]][i - 1];
+                        values[item.v2][i] = func(values[item.v2][i - 1], values[parents[item.v2][i - 1]][i - 1]);
+                    }
                     q.Enqueue(item.v2);
                 }
             }
         }
     }
-    public LCATree(List<int>[] g, int root = 0) {
-        int n = g.Length;
-        par = new int[n][];
-        dep = new int[n];
-        dis = new long[n];
-        m = 1;
-        while ((1 << m - 1) < n) ++m;
-        for (int i = 0; i < n; i++) {
-            dep[i] = -1;
-            par[i] = new int[m];
-            for (int j = 0; j < m; j++) par[i][j] = -1;
-        }
-        dep[root] = 0;
-        var q = new Queue<int>();
-        q.Enqueue(root);
-        while (q.Count > 0) {
-            var p = q.Dequeue();
-            foreach (var item in g[p]) {
-                if (dep[item] == -1) {
-                    dep[item] = dep[p] + 1;
-                    dis[item] = dis[p] + 1;
-                    par[item][0] = p;
-                    for (int i = 1; i < m && par[item][i - 1] != -1; i++)
-                        par[item][i] = par[par[item][i - 1]][i - 1];
-
-                    q.Enqueue(item);
-                }
-            }
-        }
-    }
-    int climb(int a, int d) {
-        for (int i = 0; i < m; i++) if ((d >> i & 1) == 1) a = par[a][i];
-        return a;
-    }
-    public int lca(int a, int b) {
-        if (dep[a] > dep[b]) a = climb(a, dep[a] - dep[b]);
-        if (dep[a] < dep[b]) b = climb(b, dep[b] - dep[a]);
-        if (a == b) return a;
+    T climb(ref int p, int cnt) {
+        T val = identity;
         for (int i = m - 1; i >= 0 ; i--) {
-            if (par[a][i] != par[b][i]) {
-                a = par[a][i];
-                b = par[b][i];
+            if (((cnt >> i) & 1) == 1) {
+                val = func(val, values[p][i]);
+                p = parents[p][i];
             }
         }
-        return par[a][0];
+        return val;
     }
-    public long dist(int a, int b) => dis[a] + dis[b] - dis[lca(a, b)] * 2;
+    public pair<T, int> lca(int p, int q) {
+        T val = identity;
+        if (depth[p] > depth[q]) val = climb(ref p, depth[p] - depth[q]);
+        if (depth[p] < depth[q]) val = climb(ref q, depth[q] - depth[p]);
+        if (p == q) return new pair<T, int>(val, p);
+
+        for (int i = m - 1; i >= 0 ; i--) {
+            if (parents[p][i] != parents[q][i]) {
+                val = func(val, values[p][i]);
+                val = func(val, values[q][i]);
+                p = parents[p][i];
+                q = parents[q][i];
+            }
+        }
+        {
+            val = func(val, values[p][0]);
+            val = func(val, values[q][0]);
+            p = parents[p][0];
+            q = parents[q][0];
+        }
+        return new pair<T, int>(val, p);
+    }
 }
