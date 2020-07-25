@@ -76,6 +76,14 @@ static class util {
                                          .Where(p => inside(p.v1, p.v2, h, w)).ToArray();
     public static P[] adjacents(this P p) => adjacents(p.v1, p.v2);
     public static P[] adjacents(this P p, int h, int w) => adjacents(p.v1, p.v2, h, w);
+
+    public static List<int> all_subset(this int p) {
+        var res = new List<int>();
+        for (int i = 0; ; i = i - p & p) {
+            res.Add(i);
+            if (i == p) return res;
+        }
+    }
     public static Dictionary<T, int> compress<T>(this IEnumerable<T> a)
         => a.Distinct().OrderBy(v => v).Select((v, i) => new { v, i }).ToDictionary(p => p.v, p => p.i);
     public static Dictionary<T, int> compress<T>(params IEnumerable<T>[] a) => compress(a.Aggregate(Enumerable.Union));
