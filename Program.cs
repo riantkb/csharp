@@ -67,26 +67,23 @@ static class util {
         return a.Count.CompareTo(b.Count);
     }
     public static bool inside(int i, int j, int h, int w) => i >= 0 && i < h && j >= 0 && j < w;
-    static readonly int[] dd = { 0, 1, 0, -1 };
+    public static readonly int[] dd = { 0, 1, 0, -1 };
     // static readonly string dstring = "RDLU";
-    public static P[] adjacents(int i, int j)
-        => Enumerable.Range(0, dd.Length).Select(k => new P(i + dd[k], j + dd[k ^ 1])).ToArray();
-    public static P[] adjacents(int i, int j, int h, int w)
-        => Enumerable.Range(0, dd.Length).Select(k => new P(i + dd[k], j + dd[k ^ 1]))
-                                         .Where(p => inside(p.v1, p.v2, h, w)).ToArray();
-    public static P[] adjacents(this P p) => adjacents(p.v1, p.v2);
-    public static P[] adjacents(this P p, int h, int w) => adjacents(p.v1, p.v2, h, w);
-
-    public static List<int> all_subset(this int p) {
-        var res = new List<int>();
+    public static IEnumerable<P> adjacents(int i, int j)
+        => Enumerable.Range(0, dd.Length).Select(k => new P(i + dd[k], j + dd[k ^ 1]));
+    public static IEnumerable<P> adjacents(int i, int j, int h, int w)
+        => adjacents(i, j).Where(p => inside(p.v1, p.v2, h, w));
+    public static IEnumerable<P> adjacents(this P p) => adjacents(p.v1, p.v2);
+    public static IEnumerable<P> adjacents(this P p, int h, int w) => adjacents(p.v1, p.v2, h, w);
+    public static IEnumerable<int> all_subset(this int p) {
         for (int i = 0; ; i = i - p & p) {
-            res.Add(i);
-            if (i == p) return res;
+            yield return i;
+            if (i == p) break;
         }
     }
     public static Dictionary<T, int> compress<T>(this IEnumerable<T> a)
         => a.Distinct().OrderBy(v => v).Select((v, i) => new { v, i }).ToDictionary(p => p.v, p => p.i);
-    public static Dictionary<T, int> compress<T>(params IEnumerable<T>[] a) => compress(a.Aggregate(Enumerable.Union));
+    public static Dictionary<T, int> compress<T>(params IEnumerable<T>[] a) => compress(a.SelectMany(x => x));
     public static T[] inv<T>(this Dictionary<T, int> dic) {
         var res = new T[dic.Count];
         foreach (var item in dic) res[item.Value] = item.Key;
@@ -98,21 +95,6 @@ static class util {
         var ret = new T[a.Count];
         for (int i = 0; i < a.Count; i++) ret[i] = a[i];
         return ret;
-    }
-    public static void Deconstruct<T>(this IList<T> v, out T a) {
-        a = v[0];
-    }
-    public static void Deconstruct<T>(this IList<T> v, out T a, out T b) {
-        a = v[0]; b = v[1];
-    }
-    public static void Deconstruct<T>(this IList<T> v, out T a, out T b, out T c) {
-        a = v[0]; b = v[1]; c = v[2];
-    }
-    public static void Deconstruct<T>(this IList<T> v, out T a, out T b, out T c, out T d) {
-        a = v[0]; b = v[1]; c = v[2]; d = v[3];
-    }
-    public static void Deconstruct<T>(this IList<T> v, out T a, out T b, out T c, out T d, out T e) {
-        a = v[0]; b = v[1]; c = v[2]; d = v[3]; e = v[4];
     }
 }
 
