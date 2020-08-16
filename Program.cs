@@ -13,7 +13,7 @@ class Program {
     static void Main(string[] args) {
         var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
         var solver = new Solver(sw);
-        // var t = new Thread(solver.solve, 1 << 26); // 64 MB
+        // var t = new Thread(solver.solve, 1 << 28); // 256 MB
         // t.Start();
         // t.Join();
         solver.solve();
