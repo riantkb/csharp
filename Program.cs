@@ -105,7 +105,8 @@ class Scan {
     public int Int => int.Parse(Str);
     public long Long => long.Parse(Str);
     public double Double => double.Parse(Str);
-    public string Str => sr.ReadLine().Trim();
+    public string Str => ReadLine.Trim();
+    public string ReadLine => sr.ReadLine();
     public pair<T, U> Pair<T, U>() {
         T a; U b;
         Multi(out a, out b);
