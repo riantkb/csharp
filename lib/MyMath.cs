@@ -153,10 +153,14 @@ static class MyMath {
     }
     // nC0, nC2, ..., nCn
     public static long[] getcomb(int n) {
-        var ret = new long[n + 1];
-        ret[0] = 1;
-        for (int i = 0; i < n; i++) ret[i + 1] = ret[i] * (n - i) % Mod * inv(i + 1) % Mod;
-        return ret;
+        // var ret = new long[n + 1];
+        // ret[0] = 1;
+        // for (int i = 0; i < n; i++) ret[i + 1] = ret[i] * (n - i) % Mod * inv(i + 1) % Mod;
+        // return ret;
+        if (facts == null || facts.Length <= n) setfacts(n);
+        var res = new long[n + 1];
+        for (int i = 0; i < n + 1; i++) res[i] = facts[n] * invs[i] % Mod * invs[n - i] % Mod;
+        return res;
     }
 
     public static class ModMatrix {
