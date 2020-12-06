@@ -159,58 +159,7 @@ static class MyMath {
         // return ret;
         if (facts == null || facts.Length <= n) setfacts(n);
         var res = new long[n + 1];
-        for (int i = 0; i < n + 1; i++) res[i] = facts[n] * invs[i] % Mod * invs[n - i] % Mod;
+        for (int i = 0; i < n + 1; i++) res[i] = comb(n, i);
         return res;
-    }
-
-    public static class ModMatrix {
-        public static long[][] E(int n) {
-            var ret = new long[n][];
-            for (int i = 0; i < n; i++) { ret[i] = new long[n]; ret[i][i] = 1; }
-            return ret;
-        }
-        public static long[][] pow(long[][] A, long n) {
-            if (n == 0) return E(A.Length);
-            var t = pow(A, n / 2);
-            if ((n & 1) == 0) return mul(t, t);
-            return mul(mul(t, t), A);
-        }
-        public static long dot(long[] x, long[] y) {
-            int n = x.Length;
-            long ret = 0;
-            for (int i = 0; i < n; i++) ret = (ret + x[i] * y[i]) % Mod;
-            return ret;
-        }
-        public static long[][] trans(long[][] A) {
-            int n = A[0].Length, m = A.Length;
-            var ret = new long[n][];
-            for (int i = 0; i < n; i++) { ret[i] = new long[m]; for (int j = 0; j < m; j++) ret[i][j] = A[j][i]; }
-            return ret;
-        }
-        public static long[] mul(long a, long[] x) {
-            int n = x.Length;
-            var ret = new long[n];
-            for (int i = 0; i < n; i++) ret[i] = a * x[i] % Mod;
-            return ret;
-        }
-        public static long[] mul(long[][] A, long[] x) {
-            int n = A.Length;
-            var ret = new long[n];
-            for (int i = 0; i < n; i++) ret[i] = dot(x, A[i]);
-            return ret;
-        }
-        public static long[][] mul(long a, long[][] A) {
-            int n = A.Length;
-            var ret = new long[n][];
-            for (int i = 0; i < n; i++) ret[i] = mul(a, A[i]);
-            return ret;
-        }
-        public static long[][] mul(long[][] A, long[][] B) {
-            int n = A.Length;
-            var Bt = trans(B);
-            var ret = new long[n][];
-            for (int i = 0; i < n; i++) ret[i] = mul(Bt, A[i]);
-            return ret;
-        }
     }
 }
