@@ -69,8 +69,9 @@ static class util {
     public static bool inside(int i, int j, int h, int w) => i >= 0 && i < h && j >= 0 && j < w;
     public static readonly int[] dd = { 0, 1, 0, -1 };
     // static readonly string dstring = "RDLU";
-    public static IEnumerable<P> adjacents(int i, int j)
-        => Enumerable.Range(0, dd.Length).Select(k => new P(i + dd[k], j + dd[k ^ 1]));
+    public static IEnumerable<P> adjacents(int i, int j) {
+        for (int k = 0; k < 4; k++) yield return new P(i + dd[k], j + dd[k ^ 1]);
+    }
     public static IEnumerable<P> adjacents(int i, int j, int h, int w)
         => adjacents(i, j).Where(p => inside(p.v1, p.v2, h, w));
     public static IEnumerable<P> adjacents(this P p) => adjacents(p.v1, p.v2);
@@ -136,5 +137,8 @@ class Scan {
     }
     public void Multi<T, U, V, W, X>(out T a, out U b, out V c, out W d, out X e) {
         var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); d = cv<W>(ar[3]); e = cv<X>(ar[4]);
+    }
+    public void Multi<T, U, V, W, X, Y>(out T a, out U b, out V c, out W d, out X e, out Y f) {
+        var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); d = cv<W>(ar[3]); e = cv<X>(ar[4]); f = cv<Y>(ar[5]);
     }
 }
