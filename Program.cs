@@ -46,7 +46,7 @@ class pair<T, U> : IComparable<pair<T, U>> {
         int c = Comparer<T>.Default.Compare(v1, a.v1);
         return c != 0 ? c : Comparer<U>.Default.Compare(v2, a.v2);
     }
-    public override string ToString() => v1 + " " + v2;
+    public override string ToString() => $"{v1} {v2}";
     public void Deconstruct(out T a, out U b) { a = v1; b = v2; }
 }
 static class util {
@@ -72,8 +72,10 @@ static class util {
     public static IEnumerable<P> adjacents(int i, int j) {
         for (int k = 0; k < 4; k++) yield return new P(i + dd[k], j + dd[k ^ 1]);
     }
-    public static IEnumerable<P> adjacents(int i, int j, int h, int w)
-        => adjacents(i, j).Where(p => inside(p.v1, p.v2, h, w));
+    public static IEnumerable<P> adjacents(int i, int j, int h, int w) {
+        for (int k = 0; k < 4; k++) if (inside(i + dd[k], j + dd[k ^ 1], h, w))
+            yield return new P(i + dd[k], j + dd[k ^ 1]);
+    }
     public static IEnumerable<P> adjacents(this P p) => adjacents(p.v1, p.v2);
     public static IEnumerable<P> adjacents(this P p, int h, int w) => adjacents(p.v1, p.v2, h, w);
     public static IEnumerable<int> all_subset(this int p) {
@@ -84,14 +86,17 @@ static class util {
     }
     public static Dictionary<T, int> compress<T>(this IEnumerable<T> a)
         => a.Distinct().OrderBy(v => v).Select((v, i) => new { v, i }).ToDictionary(p => p.v, p => p.i);
-    public static Dictionary<T, int> compress<T>(params IEnumerable<T>[] a) => compress(a.SelectMany(x => x));
+    public static Dictionary<T, int> compress<T>(params IEnumerable<T>[] a)
+        => compress(a.SelectMany(x => x));
     public static T[] inv<T>(this Dictionary<T, int> dic) {
         var res = new T[dic.Count];
         foreach (var item in dic) res[item.Value] = item.Key;
         return res;
     }
     public static void swap<T>(ref T a, ref T b) where T : struct { var t = a; a = b; b = t; }
-    public static void swap<T>(this IList<T> a, int i, int j) where T : struct { var t = a[i]; a[i] = a[j]; a[j] = t; }
+    public static void swap<T>(this IList<T> a, int i, int j) where T : struct {
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
     public static T[] copy<T>(this IList<T> a) {
         var ret = new T[a.Count];
         for (int i = 0; i < a.Count; i++) ret[i] = a[i];
@@ -136,9 +141,12 @@ class Scan {
         var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); d = cv<W>(ar[3]);
     }
     public void Multi<T, U, V, W, X>(out T a, out U b, out V c, out W d, out X e) {
-        var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); d = cv<W>(ar[3]); e = cv<X>(ar[4]);
+        var ar = StrArr;
+        a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); d = cv<W>(ar[3]); e = cv<X>(ar[4]);
     }
     public void Multi<T, U, V, W, X, Y>(out T a, out U b, out V c, out W d, out X e, out Y f) {
-        var ar = StrArr; a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]); d = cv<W>(ar[3]); e = cv<X>(ar[4]); f = cv<Y>(ar[5]);
+        var ar = StrArr;
+        a = cv<T>(ar[0]); b = cv<U>(ar[1]); c = cv<V>(ar[2]);
+        d = cv<W>(ar[3]); e = cv<X>(ar[4]); f = cv<Y>(ar[5]);
     }
 }
