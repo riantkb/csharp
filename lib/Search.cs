@@ -10,7 +10,6 @@ static class Search {
         }
         return r;
     }
-
     public static long MyBinarySearch(Predicate<long> is_r, long l, long r) {
         while (l < r - 1) {
             var m = l + ((r - l) >> 1);
