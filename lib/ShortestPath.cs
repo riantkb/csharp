@@ -62,6 +62,7 @@ static class ShortestPath {
         }
 
         void init(int m, int s, Number inf) {
+            n = 1;
             values = new Number[m];
             keys = new int[m];
             indices = new int[m];
@@ -74,11 +75,28 @@ static class ShortestPath {
             keys[0] = s;
             indices[s] = 0;
         }
+        void init(Number[] dist) {
+            n = dist.Length;
+            values = dist;
+            keys = new int[n];
+            for (int i = 0; i < n; i++) keys[i] = i;
+            Array.Sort(keys, (x, y) => values[x].CompareTo(values[y]));
+            indices = new int[n];
+            for (int i = 0; i < n; i++) indices[keys[i]] = i;
+        }
+        public void Run(List<pair<Number, int>>[] edges, Number[] dist) {
+            init(dist);
 
+            while (n > 0) {
+                int p = Pop();
+                foreach (var e in edges[p])
+                    if (values[e.v2] > values[p] + e.v1)
+                        Update(e.v2, values[p] + e.v1);
+            }
+        }
         public Number[] Run(List<pair<Number, int>>[] edges, int s, Number inf) {
             init(edges.Length, s, inf);
 
-            n = 1;
             while (n > 0) {
                 int p = Pop();
                 foreach (var e in edges[p])
@@ -92,7 +110,6 @@ static class ShortestPath {
             var cnts = new long[edges.Length];
             cnts[s] = 1;
 
-            n = 1;
             while (n > 0) {
                 int p = Pop();
                 foreach (var e in edges[p])
@@ -109,6 +126,9 @@ static class ShortestPath {
 
     public static Number[] Dijkstra(List<pair<Number, int>>[] edges, int s, Number inf)
         => new Heap().Run(edges, s, inf);
+
+    public static void Dijkstra(List<pair<Number, int>>[] edges, Number[] dist)
+        => new Heap().Run(edges, dist);
 
     public static pair<Number[], long[]> Dijkstra(List<pair<Number, int>>[] edges, int s, long Mod, Number inf)
         => new Heap().Run(edges, s, Mod, inf);
