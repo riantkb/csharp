@@ -141,7 +141,10 @@ static class MyMath {
         }
         return numer * inv(denom) % Mod;
     }
-    public static long multi_choose(long n, long r) => comb(n + r - 1, r);
+    public static long multi_choose(long n, long r) {
+        if (n == 0 && r == 0) return 1;
+        else return comb(n + r - 1, r);
+    }
     public static long[][] getcombs(int n) {
         var ret = new long[n + 1][];
         for (int i = 0; i <= n; i++) {
