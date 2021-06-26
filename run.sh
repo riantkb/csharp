@@ -10,5 +10,5 @@ if [ $? -ne 0 ] ; then
     exit
 fi
 echo "Compilation succeeded." >&2
-mono Program.exe < /dev/stdin
+time mono Program.exe < /dev/stdin
 # cat submittable.txt | pbcopy
