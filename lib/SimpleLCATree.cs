@@ -10,7 +10,7 @@ class SimpleLCATree {
         parents = new int[n][];
         depth = new int[n];
         m = 1;
-        while ((1 << m - 1) < n) ++m;
+        while ((1 << m) < n) ++m;
         for (int i = 0; i < n; i++) {
             parents[i] = new int[m];
             depth[i] = -1;

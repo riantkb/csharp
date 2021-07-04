@@ -17,7 +17,7 @@ class LCATree<T> {
         this.func = func;
         this.identity = identity;
         m = 1;
-        while ((1 << m - 1) < n) ++m;
+        while ((1 << m) < n) ++m;
         for (int i = 0; i < n; i++) {
             parents[i] = new int[m];
             values[i] = new T[m];
