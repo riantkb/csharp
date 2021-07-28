@@ -105,6 +105,21 @@ static class ShortestPath {
             }
             return values;
         }
+        public pair<Number[], int[]> Run2(List<pair<Number, int>>[] edges, int s, Number inf) {
+            init(edges.Length, s, inf);
+            var prev = new int[edges.Length];
+            for (int i = 0; i < prev.Length; i++) prev[i] = -1;
+
+            while (n > 0) {
+                int p = Pop();
+                foreach (var e in edges[p])
+                    if (values[e.v2] > values[p] + e.v1) {
+                        Update(e.v2, values[p] + e.v1);
+                        prev[e.v2] = p;
+                    }
+            }
+            return new pair<Number[], int[]>(values, prev);
+        }
         public pair<Number[], long[]> Run(List<pair<Number, int>>[] edges, int s, long Mod, Number inf) {
             init(edges.Length, s, inf);
             var cnts = new long[edges.Length];
@@ -122,6 +137,22 @@ static class ShortestPath {
             }
             return new pair<Number[], long[]>(values, cnts);
         }
+    }
+
+    public static pair<Number, List<int>> GetShortestPath(List<pair<Number, int>>[] edges, int s, int t, Number inf) {
+        var pp = new Heap().Run2(edges, s, inf);
+        var dist = pp.v1;
+        var prev = pp.v2;
+        var res = new List<int>();
+        if (dist[t] == inf) return new pair<Number, List<int>>(inf, res);
+        int now = t;
+        while (now != s) {
+            res.Add(now);
+            now = prev[now];
+        }
+        res.Add(now);
+        res.Reverse();
+        return new pair<Number, List<int>>(dist[t], res);
     }
 
     public static Number[] Dijkstra(List<pair<Number, int>>[] edges, int s, Number inf)
