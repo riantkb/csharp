@@ -154,9 +154,23 @@ static class ShortestPath {
         res.Reverse();
         return new pair<Number, List<int>>(dist[t], res);
     }
+    public static List<int> GetShortestPath(int s, int t, Number[] dist, int[] prev) {
+        var res = new List<int>();
+        int now = t;
+        while (now != s) {
+            res.Add(now);
+            now = prev[now];
+        }
+        res.Add(now);
+        res.Reverse();
+        return res;
+    }
 
     public static Number[] Dijkstra(List<pair<Number, int>>[] edges, int s, Number inf)
         => new Heap().Run(edges, s, inf);
+
+    public static pair<Number[], int[]> Dijkstra2(List<pair<Number, int>>[] edges, int s, Number inf)
+        => new Heap().Run2(edges, s, inf);
 
     public static void Dijkstra(List<pair<Number, int>>[] edges, Number[] dist)
         => new Heap().Run(edges, dist);
