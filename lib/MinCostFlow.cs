@@ -29,24 +29,22 @@ class MinCostFlow {
         long res = 0;
         var h = new long[n];
         while (f > 0) {
-            var q = new PriorityQueue<pair<long, int>>(){ rev = true };
             var dist = new long[n];
             var prevv = new int[n];
             var preve = new int[n];
             for (int i = 0; i < n; i++) dist[i] = util.LM;
             dist[s] = 0;
-            q.Push(new pair<long, int>(0, s));
+            var q = new Heap<long>(n){ rev = true };
+            q.Update(s, 0);
             while (q.Count > 0) {
-                var p = q.Pop();
-                int v = p.v2;
-                if (dist[v] < p.v1) continue;
+                int v = q.Pop();
                 for (int i = 0; i < g[v].Count; ++i) {
                     var e = g[v][i];
                     if (e.cap > 0 && dist[e.to] > dist[v] + e.cost + h[v] - h[e.to]) {
                         dist[e.to] = dist[v] + e.cost + h[v] - h[e.to];
                         prevv[e.to] = v;
                         preve[e.to] = i;
-                        q.Push(new pair<long, int>(dist[e.to], e.to));
+                        q.Update(e.to, dist[e.to]);
                     }
                 }
             }

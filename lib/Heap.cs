@@ -71,6 +71,5 @@ class Heap<T> {
         indices[i] = p;
         return ret;
     }
-    public T Top => values[keys[0]];
-    public int Top_Key => keys[0];
+    public int Count => n;
 }
